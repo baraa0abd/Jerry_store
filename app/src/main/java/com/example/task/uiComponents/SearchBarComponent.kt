@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -94,6 +95,7 @@ fun SearchBarComponent() {
             IconButton(
                 onClick = { /* Handle filter click */ },
                 modifier = Modifier
+                    .offset(x=20.dp)
                     .size(48.dp) // W: 48, H: 48 (overall button size)
                     .clip(RoundedCornerShape(12.dp)) // Corner radius: 12 (applied to the button)
                     .background(Color(0xFF03578A)) // Fill: 03578A (dark blue, 100%)

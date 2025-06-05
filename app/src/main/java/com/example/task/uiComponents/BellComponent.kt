@@ -93,7 +93,7 @@ fun appBar() {
             }
             Box(
                 modifier = Modifier
-                    .offset(x = (55).dp, y = (-16).dp)
+                    .offset(x = (60).dp, y = (-16).dp)
                     .size(14.dp)
                     .clip(CircleShape)
                     .background(Color(0xFF03578A)),
@@ -111,6 +111,7 @@ fun appBar() {
 
             Box(
                 modifier = Modifier
+                    .offset(x = (5).dp)
                     .size(40.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .border(
