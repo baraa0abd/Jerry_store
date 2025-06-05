@@ -222,7 +222,6 @@ fun TomCard(character: TomCharacter, modifier: Modifier = Modifier) {
             .size(160.dp, 219.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
