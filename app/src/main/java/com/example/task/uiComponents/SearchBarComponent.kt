@@ -54,38 +54,40 @@ fun SearchBarComponent() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp) // Gap: 8 (between search input and filter button)
         ) {
-            // Search Input Area (Left side)
-            Row(
-                modifier = Modifier
-                    .weight(1f), // Takes up remaining space horizontally
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp) // Space between search icon and text
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search icon",
-                    tint = Color(0xFF969799), // Text color: 969799 (gray)
-                    modifier = Modifier.size(20.dp) // Standard icon size
-                )
-                BasicTextField(
-                    value = searchText,
-                    onValueChange = { searchText = it },
-                    textStyle = TextStyle(
-                        color = Color(0xFF1F1F1E),
-                        fontSize = 16.sp
-                    ),
-                    modifier = Modifier.fillMaxWidth(), // Fills available space in the Row
-                    decorationBox = { innerTextField ->
-                        if (searchText.isEmpty()) {
-                            Text(
-                                text = "Search about tom ...",
-                                color = Color(0xFF969799),
-                                fontSize = 16.sp
-                            )
+            Box(
+                modifier = Modifier.size(272.dp,48.dp)
+            ){
+                // Search Input Area (Left side)
+                Row( // Takes up remaining space horizontally
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp) // Space between search icon and text
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search icon",
+                        tint = Color(0xFF969799), // Text color: 969799 (gray)
+                        modifier = Modifier.size(20.dp) // Standard icon size
+                    )
+                    BasicTextField(
+                        value = searchText,
+                        onValueChange = { searchText = it },
+                        textStyle = TextStyle(
+                            color = Color(0xFF1F1F1E),
+                            fontSize = 16.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth(), // Fills available space in the Row
+                        decorationBox = { innerTextField ->
+                            if (searchText.isEmpty()) {
+                                Text(
+                                    text = "Search about tom ...",
+                                    color = Color(0xFF969799),
+                                    fontSize = 16.sp
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
-                    }
-                )
+                    )
+                }
             }
 
             // Filter Button (Right side) - Adjusted padding and icon size

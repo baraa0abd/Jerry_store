@@ -37,6 +37,7 @@ fun appBar() {
         modifier = Modifier
             .size(width = 360.dp, height = 56.dp)
             .padding(horizontal = 16.dp, vertical = 4.dp)
+            .background(Color(0xFFEEF4F6))
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

@@ -67,13 +67,11 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
         TomCharacter("Frozen Tom", "He was chasing Jerry, he froze from the first look", 10, R.drawable.frozen),
         TomCharacter("Sleeping Tom", "He doesn't chase anyone, he just snores in stereo.", 10, R.drawable.sleeping)
     )
-    val textPartColor = Color.White // Example: White text
-    val textPartBackgroundColor = Color(0xFF03578A) // Example: Dark blue background
 
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F3F5)), // This light gray background corresponds to the overall screen background
+            .background(Color(0xFFEEF4F6)), // This light gray background corresponds to the overall screen background
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
     ) {
