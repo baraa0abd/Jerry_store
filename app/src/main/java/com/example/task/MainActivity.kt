@@ -42,7 +42,7 @@ fun AppContent() {
                     appBar() // This will be at the very top of the screen
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = Color(0xFFE9F6FB)
                 )
             )
         }
