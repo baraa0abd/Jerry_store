@@ -46,8 +46,9 @@ import androidx.compose.ui.unit.sp
 import com.example.task.R
 import com.example.task.ui.theme.TaskTheme
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
-
+import androidx.compose.ui.text.style.TextDecoration
 
 data class TomCharacter(
     val name: String,
@@ -66,6 +67,8 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
         TomCharacter("Frozen Tom", "He was chasing Jerry, he froze from the first look", 10, R.drawable.frozen),
         TomCharacter("Sleeping Tom", "He doesn't chase anyone, he just snores in stereo.", 10, R.drawable.sleeping)
     )
+    val textPartColor = Color.White // Example: White text
+    val textPartBackgroundColor = Color(0xFF03578A) // Example: Dark blue background
 
     LazyColumn(
         modifier = modifier
@@ -135,8 +138,8 @@ fun BannerCard(modifier: Modifier = Modifier) {
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(Color(0xFF03446A), Color(0xFF0685D0)),
-                        start = Offset(50f, 50f),
-                        end = Offset(100f, 100f)
+                        start = Offset(30f, 30f),
+                        end = Offset(30f, 30f)
                     ),
                     shape = RoundedCornerShape(16.dp)
                 )
@@ -177,15 +180,16 @@ fun BannerCard(modifier: Modifier = Modifier) {
             // Image overlay
             Box(
                 modifier = Modifier
-                    .offset(y=25.dp)
+                    .offset(x=50.dp,y=0.dp)
                     .width(200.4.dp)
-                    .height(250.dp)
+                    .height(500.dp)
                     .align(Alignment.TopEnd)
-                    .offset(y = (-16).dp) // Use offset instead of negative padding
             ) {
                 Image(
                     painter = painterResource(R.drawable.money),
                     contentDescription = "Promotional Banner",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
@@ -243,21 +247,21 @@ fun TomCard(character: TomCharacter, modifier: Modifier = Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
-                    modifier = Modifier.height(27.dp),
+                    modifier = Modifier.size(144.dp,27.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "tom",
+                        text = "Sport Tom",
                         style = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 18.sp, textAlign = TextAlign.Center, color = Color(0xFF1F1F1E)),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
                 Box(
-                    modifier = Modifier.height(54.dp),
+                    modifier = Modifier.size(144.dp,54.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "tom",
+                        text = "He runs 1 meter... trips over his boot.\n",
                         style = TextStyle(fontWeight = FontWeight.Normal, fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF969799)),
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
                     )
@@ -265,22 +269,108 @@ fun TomCard(character: TomCharacter, modifier: Modifier = Modifier) {
             }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceAround, // Distribute cheese and cart
+                    .width(144.dp)
+                    .height(30.dp),
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Example for cheese and amount
-                    Image(painterResource(R.drawable.cheese), contentDescription = "Cheese", modifier = Modifier.size(16.dp))
-                }
-                // Example for cart icon
-                Image(painterResource(R.drawable.shopping), contentDescription = "Add to cart", modifier = Modifier.size(24.dp))
+                // First Column (Cheese Info)
+                Column(
+                    modifier = Modifier
+                        // .border-radius: 8px; -> Applied to the inner Box's background/clip
+                        // .gap: 4px; -> This Column has one child (the Row), so gap doesn't apply directly here.
+                        .padding(
+                            top = 4.dp,
+                            end = 8.dp,
+                            bottom = 4.dp,
+                            start = 8.dp
+                        )
+                ) {
+                    Row( // This was the Box with background #E9F6FB
+                        modifier = Modifier
+                            .width(95.dp)
+                            .height(60.dp)
+                            .clip(RoundedCornerShape(8.dp)) // From parent Column's border-radius comment
+                            .background(Color(0xFFE9F6FB)),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Spacer(Modifier.width(4.dp)) // Small initial padding
+
+                        Column( // For Image
+                            modifier = Modifier
+                                .width(16.dp)
+                                .height(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.cheese), // Replace with actual resource
+                                contentDescription = "Cheese",
+                                modifier = Modifier.size(16.dp) // Ensures image is 16x16
+                            )
+                        }
+
+                        Spacer(Modifier.width(8.dp)) // Space between image and text
+                        val textPartColor = Color.White // Example: White text
+                        val textPartBackgroundColor = Color(0xFF03578A) // Example: Dark blue background
+                        val commonStyle = TextStyle(
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            lineHeight = 12.sp, // Consistent line height
+                            letterSpacing = 0.sp,
+                            color = textPartColor
+                        )
+
+                        Row(
+
+                        ) {
+                            // Text part 1: "5" with line-through
+                            Text(
+                                text = "5",
+                                style = commonStyle.copy( // Use common style and add textDecoration
+                                    textDecoration = TextDecoration.LineThrough,
+                                    color = Color(0xFF03578A)
+                                )
+                            )
+
+                            // Text part 2: " 3 cheeses" without line-through
+                            // Note the leading space in " 3 cheeses" to maintain the visual separation.
+                            Text(
+                                text = " 3 cheeses",
+                                style = commonStyle ,
+                                color = Color(0xFF03578A)
+                            )
+                        }
+                    }
             }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Box(
+                    modifier = Modifier
+                        .width(90.dp)
+                        .height(30.dp)
+                        .clip(RoundedCornerShape(8.dp)) // border-radius: 8px
+                        .border(
+                            width = 1.dp,
+                            color = Color.Gray, // Assuming a border color
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    contentAlignment = Alignment.Center // To center the image in the padded area
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.shopping), // Replace with actual resource
+                        contentDescription = "Add to cart"
+                    )
+                }
+                }
         }
     }
 }
-
+}
 @Preview(showBackground = true, widthDp = 360)
 @Composable
 fun PreviewHomeScreenContent() {
