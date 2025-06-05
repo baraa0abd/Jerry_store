@@ -1,6 +1,8 @@
 package com.example.task.uiComponents
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,16 +10,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -33,85 +35,84 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.task.R
 import com.example.task.ui.theme.TaskTheme
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.text.font.FontFamily
 
-// Data class to represent a Tom character for the cards
+
 data class TomCharacter(
     val name: String,
     val description: String,
     val cheeseCost: Int,
-    val imageResId: Int?
+    val imageResId: Int
 )
 
 @Composable
 fun HomeScreenContent(modifier: Modifier = Modifier) {
+    val tomCharacters = listOf(
+        TomCharacter("Sport Tom", "He runs 1 meter... trips over his boot.", 3, R.drawable.sport),
+        TomCharacter("Tom the lover", "He loves one-sidedly... and is beaten by the other side.", 5, R.drawable.lover),
+        TomCharacter("Tom the bomb", "He blows himself up before Jerry can catch him.", 10, R.drawable.tom),
+        TomCharacter("Spy Tom", "Disguises itself as a table.", 12, R.drawable.spy),
+        TomCharacter("Frozen Tom", "He was chasing Jerry, he froze from the first look", 10, R.drawable.frozen),
+        TomCharacter("Sleeping Tom", "He doesn't chase anyone, he just snores in stereo.", 10, R.drawable.sleeping)
+    )
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F3F5)),
+            .background(Color(0xFFF2F3F5)), // This light gray background corresponds to the overall screen background
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
     ) {
         item {
-            SearchBarComponent()
+            // SearchBarComponent's internal padding (16dp horizontal) should now be the outer padding
+            SearchBarComponent() // This component has internal padding (16dp horizontal)
         }
 
         item {
+            // BannerCard should *not* have its own horizontal padding anymore
             BannerCard(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth() // Now it will extend to the edges of the LazyColumn's content area
             )
         }
 
         item {
+            // TomSectionHeader should *not* have its own horizontal padding anymore
             TomSectionHeader(
                 title = "Cheap tom section",
-                modifier = Modifier.fillMaxWidth() // Fill width within contentPadding
+                modifier = Modifier.fillMaxWidth() // Now it will extend to the edges of the LazyColumn's content area
             )
         }
 
-        val tomCharacters = listOf(
-            TomCharacter("Sport Tom", "He runs 1 meter... trips over his boot.", 3, null),
-            TomCharacter("Tom the lover", "He loves one-sidedly... and is beaten by the other side.", 5, null),
-            TomCharacter("Tom the bomb", "He blows himself up before Jerry can catch him.", 10, null),
-            TomCharacter("Spy Tom", "Disguises itself as a table.", 12, null),
-            TomCharacter("Frozen Tom", "He was chasing Jerry, he froze from the first look", 10, null),
-            TomCharacter("Sleeping Tom", "He doesn't chase anyone, he just snores in stereo.", 10, null),
-            // Add more characters to ensure scrolling
-            TomCharacter("Chef Tom", "Always cooking up new schemes to catch Jerry.", 15, null),
-            TomCharacter("Musician Tom", "Plays the piano, but usually ends up chasing Jerry.", 8, null),
-            TomCharacter("Athlete Tom", "Trains hard, but still can't outsmart a mouse.", 7, null),
-            TomCharacter("Scientist Tom", "Experiments gone wrong are his specialty.", 11, null)
-        )
-
-        item {
-            // IMPORTANT: Using Modifier.height(IntrinsicSize.Max) to allow LazyVerticalGrid
-            // to measure its full height based on its content when nested inside LazyColumn.
-            // This transfers scrolling responsibility to the parent LazyColumn.
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(800.dp), // <--- CHANGE THIS FOR PREVIEW. Use a value large enough to show all items.
-                // .height(IntrinsicSize.Max), // Keep this line commented out for preview
-                userScrollEnabled = false,
-                contentPadding = PaddingValues(0.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+        items(tomCharacters.chunked(2)) { pair ->
+            Row(
+                modifier = Modifier.fillMaxWidth(), // Row takes up full width within LazyColumn's padding
+                horizontalArrangement = Arrangement.spacedBy(20.dp), // Space between columns
+                verticalAlignment = Alignment.Top
             ) {
-                items(tomCharacters) { character ->
-                    TomCard(character = character)
+                pair.forEach { character ->
+                    TomCard(
+                        character = character,
+                        modifier = Modifier.weight(1f) // Each card takes equal weight
+                    )
+                }
+                if (pair.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
     }
 }
-
-// ... (BannerCard, TomSectionHeader, TomCard remain the same as previous updates)
 @Composable
 fun BannerCard(modifier: Modifier = Modifier) {
     Box(
@@ -128,50 +129,65 @@ fun BannerCard(modifier: Modifier = Modifier) {
                 )
             )
     ) {
-        // Placeholder for the background image
-        // When you have the image:
-        /*
-        Image(
-            painter = painterResource(id = R.drawable.tom_jerry_banner),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.CenterEnd,
-            modifier = Modifier.fillMaxSize()
-        )
-        */
-        // Using a colored Box as a placeholder for the image
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Gray.copy(alpha = 0.3f)) // A semi-transparent gray placeholder
-        )
-
-
-        // Overlay with text (transparent dark overlay if needed)
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.3f)) // Subtle dark overlay for text readability
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 24.dp)
-                .padding(vertical = 12.dp),
-            verticalArrangement = Arrangement.Center
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(Color(0xFF03446A), Color(0xFF0685D0)),
+                        start = Offset(50f, 50f),
+                        end = Offset(100f, 100f)
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
         ) {
-            Text(
-                text = "Buy 1 Tom and get 2 for free",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Adopt Tom! (Free Fail-Free Guarantee)",
-                color = Color.White.copy(alpha = 0.9f),
-                fontSize = 14.sp
-            )
+            // Text content
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(225.dp)
+                    .padding(start = 24.dp, top = 12.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Buy 1 Tom and get 2 for free",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                        lineHeight = 16.sp,
+                        color = Color.White
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Adopt Tom! (Free Fail-Free Guarantee)",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 12.sp,
+                        lineHeight = 12.sp,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
+                )
+            }
+
+            // Image overlay
+            Box(
+                modifier = Modifier
+                    .offset(y=25.dp)
+                    .width(200.4.dp)
+                    .height(250.dp)
+                    .align(Alignment.TopEnd)
+                    .offset(y = (-16).dp) // Use offset instead of negative padding
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.money),
+                    contentDescription = "Promotional Banner",
+                )
+            }
         }
     }
 }
@@ -179,7 +195,7 @@ fun BannerCard(modifier: Modifier = Modifier) {
 @Composable
 fun TomSectionHeader(title: String, modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(), // Fills the width of the LazyColumn's content area
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -197,98 +213,73 @@ fun TomSectionHeader(title: String, modifier: Modifier = Modifier) {
         )
     }
 }
-
 @Composable
 fun TomCard(character: TomCharacter, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(0.7f),
-        shape = RoundedCornerShape(12.dp),
+            .size(160.dp, 219.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Tom's Image Placeholder
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.LightGray) // Light gray placeholder
+                    .size(width = 93.33.dp, height = 100.dp)
+                    .offset(y = (-16).dp)
+                    .clip(RoundedCornerShape(16.dp))
             ) {
-                // When you have the image:
-                /*
-                character.imageResId?.let { resId ->
-                    Image(
-                        painter = painterResource(id = resId),
-                        contentDescription = character.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                Image(
+                    painter = painterResource(R.drawable.sport),
+                    contentDescription = "Tom Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize())
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier.height(27.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "tom",
+                        style = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 18.sp, textAlign = TextAlign.Center, color = Color(0xFF1F1F1E)),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-                */
+                Box(
+                    modifier = Modifier.height(54.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "tom",
+                        style = TextStyle(fontWeight = FontWeight.Normal, fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF969799)),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
+                    )
+                }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = character.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = character.description,
-                fontSize = 12.sp,
-                color = Color.Gray,
-                maxLines = 2
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceAround, // Distribute cheese and cart
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Placeholder for cheese icon
-                    Icon(
-                        painter = ColorPainter(Color(0xFF03578A)), // Blue placeholder for cheese icon
-                        // When you have the image: painter = painterResource(id = R.drawable.cheese_icon),
-                        contentDescription = "Cheese cost",
-                        modifier = Modifier.size(16.dp),
-                        tint = Color(0xFF03578A) // Blue tint for cheese icon
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "${character.cheeseCost} cheeses",
-                        fontSize = 14.sp,
-                        color = Color.Black
-                    )
+                    // Example for cheese and amount
+                    Image(painterResource(R.drawable.cheese), contentDescription = "Cheese", modifier = Modifier.size(16.dp))
                 }
-
-                IconButton(
-                    onClick = { /* Add to cart */ },
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF03578A))
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "Add to cart",
-                        tint = Color.White
-                    )
-                }
+                // Example for cart icon
+                Image(painterResource(R.drawable.shopping), contentDescription = "Add to cart", modifier = Modifier.size(24.dp))
             }
         }
     }
 }
-
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
@@ -303,20 +294,5 @@ fun PreviewHomeScreenContent() {
 fun PreviewBannerCard() {
     TaskTheme {
         BannerCard(modifier = Modifier.padding(horizontal = 16.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewTomCard() {
-    TaskTheme {
-        TomCard(
-            character = TomCharacter(
-                "Sport Tom",
-                "He runs 1 meter... trips over his boot.",
-                3,
-                null
-            )
-        )
     }
 }

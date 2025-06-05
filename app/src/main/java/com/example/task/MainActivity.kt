@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.jerry_store.screens.appBar
 import com.example.task.uiComponents.HomeScreenContent
 import com.example.task.ui.theme.TaskTheme
 
@@ -38,10 +39,7 @@ fun AppContent() {
         topBar = {
             TopAppBar(
                 title = {
-                    MessageRow() // This will be at the very top of the screen
-                },
-                actions = {
-                    NotificationBell(count = 3)
+                    appBar() // This will be at the very top of the screen
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White
